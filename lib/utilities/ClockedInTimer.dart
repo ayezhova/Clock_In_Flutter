@@ -16,16 +16,6 @@ class ClockedInTimer{
       return "Clock Out";
   }
 
-  sec1Timer() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!clockedIn) {
-        timer.cancel();
-      }
-      if(clockedIn)
-        seconds++;
-      print(seconds);
-    });
-  }
   void changeClockedIn() {
     clockedIn = !(clockedIn);
     if (clockedIn)
@@ -42,17 +32,6 @@ class ClockedInTimer{
     }
     else
       return minutes.toString();
-  }
-
-  //debugging
-  String getMinutesDebug() => minutes.toString();
-
-  String getSecondsDebug() {
-    if (seconds < 10){
-      return "0" + seconds.toString();
-    }
-    else
-      return seconds.toString();
   }
 
 }

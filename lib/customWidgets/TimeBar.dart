@@ -6,12 +6,18 @@ import 'package:workday/utilities/constants.dart';
 
 
 class TimeBar extends StatefulWidget {
+  final GoalTime goalTime;
+
+  TimeBar({this.goalTime});
+
   @override
-  _TimeBarState createState() => _TimeBarState();
+  _TimeBarState createState() => _TimeBarState(goalTime: this.goalTime);
 }
 
 class _TimeBarState extends State<TimeBar> {
-  GoalTime goalTime = new GoalTime();
+  GoalTime goalTime;
+
+  _TimeBarState({this.goalTime});
 
   @override
   Widget build(BuildContext context) {

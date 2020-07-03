@@ -1,9 +1,11 @@
+import 'package:workday/utilities/goalTime.dart';
+
 class TimeEntry{
   DateTime _timeIn;
   DateTime _timeOut;
   //TODO: update to hours/minutes
 
-  TimeEntry(){
+  TimeEntry() {
     this._timeIn = DateTime.now();
   }
 
@@ -79,5 +81,18 @@ class TimeEntry{
     if (_timeOut != null)
       return getTimeString(_timeOut);
     return "---";
+  }
+
+  Map<String, dynamic> toJson() => {
+    'timeIn': _timeIn.toString(),
+    'timeOut': _timeOut.toString()
+  };
+
+  TimeEntry.fromJson(Map<String, dynamic> jsonTimeEntry) {
+    _timeIn = DateTime.parse(jsonTimeEntry['timeIn']);
+    if (jsonTimeEntry['timeOut'] == null)
+      _timeOut = DateTime.parse(jsonTimeEntry['timeOut']);
+    else
+      _timeOut = null;
   }
 }

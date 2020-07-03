@@ -15,6 +15,9 @@ class GoalTime {
       return _goalMinute.toString();
   }
 
+  void setHour(int hours) => _goalHours = hours;
+  void setMinute(int minutes) => _goalMinute = minutes;
+
   void updateHour(Direction direction) {
     if (direction == Direction.up && _goalHours > 23)
       _goalHours = 0;

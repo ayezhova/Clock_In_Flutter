@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 class TimeLogController{
   List<TimeEntry> _timeLog = [];
 
+  TimeLogController();
+
   void clockIn() {
     _timeLog.add(new TimeEntry());
   }
@@ -46,4 +48,17 @@ class TimeLogController{
     );
   }
 
+  Map<String, dynamic> toJson() => {
+    'timeLog': _timeLog,
+  };
+
+  TimeLogController.fromJson(Map<String, dynamic> jsonTimeLog) {
+    List<dynamic> decodedJsonLog = jsonTimeLog['timeLog'];
+    decodedJsonLog.map((elem) => elem.jsonDecode());
+    List <TimeEntry> timeLog = [];
+    for (int i = 0; i < decodedJsonLog.length; i++) {
+      timeLog.add(new TimeEntry.fromJson(decodedJsonLog[i]));
+    }
+    _timeLog = timeLog;
+  }
 }

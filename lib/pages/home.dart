@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:workday/customWidgets/TimeBar.dart';
 import 'package:workday/customWidgets/iconButton.dart';
 import 'package:workday/customWidgets/largeDisplayCard.dart';
+import 'package:workday/pages/stats.dart';
 import 'package:workday/pages/timeLogPage.dart';
 import 'package:workday/utilities/constants.dart';
 import 'package:workday/utilities/ClockedInTimer.dart';
 import 'package:workday/customWidgets/displayTimeText.dart';
-import 'package:async/async.dart';
+import 'package:workday/utilities/goalTime.dart';
+import 'package:workday/utilities/storage.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -18,9 +20,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Timer _timer;
   ClockedInTimer clockedInTimer = new ClockedInTimer();
+  Storage storage = new Storage();
+  Map data = {};
+  GoalTime goalTime = new GoalTime();
+  bool gotData = false;
 
-  //secs -> minutes, minutes -> secs
-  void updateSecs()
+  void updateMins()
   {
     if (_timer != null) {
       _timer.cancel();
@@ -41,8 +46,22 @@ class _HomeState extends State<Home> {
     });
   }
 
+  void updateGoal(data)
+  {
+    goalTime.setHour(data['goalHours']);
+    goalTime.setMinute(data['goalMinutes']);
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!gotData) {
+      data = data.isNotEmpty ? data : ModalRoute.of(context).settings.arguments;
+      updateGoal(data);
+      gotData = true;
+    }
+//    data = data.isNotEmpty ? data : ModalRoute.of(context).settings.arguments;
+//    updateGoal(data);
+//    print(data);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -57,7 +76,7 @@ class _HomeState extends State<Home> {
                     style: kLargeTitle,
                   )
                 ),
-                TimeBar(),
+                TimeBar(goalTime: goalTime),
               ],
             ),
             Expanded(
@@ -81,9 +100,10 @@ class _HomeState extends State<Home> {
                       margin: EdgeInsets.symmetric(vertical: 20.0),
                       child: FlatButton(
                         onPressed: () {
+                          storage.setVisitingFlag();
                           setState(() {
                             clockedInTimer.changeClockedIn();
-                            updateSecs();
+                            updateMins();
                           });
                         },
                         color: kLightYellow,
@@ -104,10 +124,11 @@ class _HomeState extends State<Home> {
         ),
       ),
       bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           CustomIconButton(
             onTap: () {
+              storage.clearVisitingFlag();
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -118,6 +139,22 @@ class _HomeState extends State<Home> {
               );
             },
             icon: Icons.keyboard_arrow_up,
+            iconSize: 80.0,
+          ),
+          CustomIconButton(
+            onTap: () async {
+              bool alreadyVisited = await storage.getVisitingFlag();
+              String string = alreadyVisited.toString();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return StatsPage(textToDisplay: string);
+                    },
+                  )
+              );
+            },
+            icon: Icons.keyboard_arrow_right,
             iconSize: 80.0,
           ),
         ],

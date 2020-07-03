@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:workday/customWidgets/customVerticalDivider.dart';
 
 const TextStyle kLargeTitle = TextStyle(
   fontSize: 50.0,

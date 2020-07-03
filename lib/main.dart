@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workday/pages/home.dart';
+import 'package:workday/pages/loading.dart';
+import 'package:workday/pages/timeLogPage.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -23,6 +25,10 @@ void main() {
         ),
       ),
     ),
-    home: Home(),
+    initialRoute: '/',
+    routes: {
+      '/': (context) => LoadingScreen(),
+      '/home': (context) => Home(),
+    },
   ));
 }
